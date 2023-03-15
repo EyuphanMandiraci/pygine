@@ -7,13 +7,23 @@ class Vector2:
     def __init__(self, position, direction, force):
         self.position = position
         self.direction = math.radians(direction)
-        self.force = force
+        self._force = force
 
         self.x = self.position.x
         self.y = self.position.y
 
+    @property
+    def force(self):
+        return self._force
+
+    @force.setter
+    def force(self, value):
+        self._force = value
+        if self._force < 0:
+            self._force = 0
+
     def getEndPosition(self):
-        return Point2(self.position.x + math.cos(self.direction) * self.force, self.position.y + math.sin(self.direction) * self.force)
+        return Point2(self.position.x + math.cos(self.direction) * (self.force / 10), self.position.y + math.sin(self.direction) * (self.force / 10))
 
     def __getitem__(self, item):
         if item == 0:
@@ -82,7 +92,17 @@ class Vector2:
         return vec
 
     def __sub__(self, other):
-        return Vector2(self.position - other.position, self.direction - other.direction, self.force - other.force)
+        temp = Vector2(
+            self.getEndPosition(),
+            math.degrees(other.direction) + 180,
+            other.force
+        )
+        vec = Vector2(
+            self.position,
+            math.degrees(self.position.directionTo(temp.getEndPosition())),
+            self.position.distanceTo(temp.getEndPosition())
+        )
+        return vec
 
     def __mul__(self, other):
         return Vector2(self.position * other, self.direction * other, self.force * other)

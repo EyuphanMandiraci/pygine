@@ -3,6 +3,9 @@ import time
 import screeninfo
 import pygame
 import sys
+
+from openal import oalQuit
+
 from pygine import math as pmath
 from typing import Union
 import math
@@ -30,8 +33,8 @@ class Window:
         self.__startTime: float = time.time()
         self.display: Union[None, pygame.Surface] = None
         self.debug: bool = debug
-        self.screens = {}
-        self.screen = None
+        self.scenes = {}
+        self.scene = None
         self.initWindow(self.title, pmath.Point2(self.width, self.height), fullscreen)
 
     def initWindow(self,
@@ -48,12 +51,12 @@ class Window:
             self.display = pygame.display.set_mode(size, pygame.DOUBLEBUF)
 
     def update(self):
-        if self.screen is not None:
-            self.screen.update()
+        if self.scene is not None:
+            self.scene.update()
 
     def draw(self):
-        if self.screen is not None:
-            self.screen.draw()
+        if self.scene is not None:
+            self.scene.draw()
         if self.debug:
             self.__drawDebug()
 
@@ -62,11 +65,11 @@ class Window:
         text = font.render(f"FPS: {int(self.clock.get_fps())}", True, (0, 255, 0))
         self.display.blit(text, (self.width - text.get_width(), 0))
 
-    def addScreen(self, name, screen):
-        self.screens[name] = screen
+    def addScene(self, name, scene):
+        self.scenes[name] = scene
 
-    def setScreen(self, name):
-        self.screen = self.screens[name]
+    def setScene(self, name):
+        self.scene = self.scenes[name]
 
     def run(self):
         while self.mainloop:
@@ -84,15 +87,15 @@ class Window:
                 if event.type == pygame.QUIT:
                     self.quit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    for component in self.screen.gui_components:
+                    for component in self.scene.gui_components:
                         if component.rect.collidepoint(event.pos):
                             component.triggerOnClick(event)
                 if event.type == pygame.MOUSEBUTTONUP:
-                    for component in self.screen.gui_components:
+                    for component in self.scene.gui_components:
                         if component.clicked:
                             component.triggerOnRelease(event)
                 if event.type == pygame.MOUSEMOTION:
-                    for component in self.screen.gui_components:
+                    for component in self.scene.gui_components:
                         if component.clicked:
                             component.triggerOnDrag(event)
             self.display.fill(self.background_color)
@@ -100,5 +103,6 @@ class Window:
             pygame.display.flip()
 
     def quit(self):
+        oalQuit()
         pygame.quit()
         sys.exit()

@@ -18,9 +18,10 @@ class Scene:
             component.draw()
 
         for actor in self.actors:
-            actor.draw(self.surface)
+            actor.draw()
 
         self.game.display.blit(self.surface, (0, 0))
+        self.surface.fill((0, 0, 0, 0))
 
     def update(self):
         mouse = pygame.mouse
@@ -43,3 +44,10 @@ class Scene:
 
     def defineActors(self):
         return []
+
+    def getActor(self, name):
+        for actor in self.actors:
+            if actor.name == name:
+                return actor
+        return None
+

@@ -50,7 +50,13 @@ class Point2:
         return item == self.x or item == self.y
 
     def __add__(self, other):
-        return Point2(self.x + other.x, self.y + other.y)
+        if isinstance(other, Point2):
+            return Point2(self.x + other.x, self.y + other.y)
+        else:
+            return Point2(
+                self.x + math.cos(other.direction) * (other.force / 10),
+                self.y + math.sin(other.direction) * (other.force / 10)
+            )
 
     def __sub__(self, other):
         return Point2(self.x - other.x, self.y - other.y)
