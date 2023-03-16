@@ -5,3 +5,4 @@ from pygine import math
 from pygine.actor import Actor
 from pygine import utils
 from pygine.input import Input
+from pygine.shape_settings import ShapeSettings

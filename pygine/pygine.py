@@ -7,6 +7,7 @@ import sys
 from openal import oalQuit
 
 from pygine import math as pmath
+import pygame.gfxdraw
 from typing import Union
 import math
 
@@ -97,6 +98,7 @@ class Window:
             self.update()
             pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION])
             self.clock.tick(self.fps if self.fps is not None else math.inf)
+
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

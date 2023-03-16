@@ -10,7 +10,7 @@ import threading
 
 class Actor:
     def __init__(self, game, name: str, tag: str, position: Point2, material: Material,
-                 size: Union[None, Point2] = None):
+                 size: Union[None, Point2] = None, autoCollide=True):
         self.name = name
         self.game = game
         self.tag = tag
@@ -18,6 +18,7 @@ class Actor:
         self.position = position
         self.first_position = position
         self.zIndex = 0
+        self.autoCollide = autoCollide
         self.baseMaterial = material
         if self.baseMaterial.type == "Color":
             self.size = size
@@ -29,6 +30,7 @@ class Actor:
         self.surface = self.material.surface
         self.rect = self.surface.get_rect()
         self.rect.topleft = self.position
+        self.mask = None
         self.animations = {}
         self.animation = None
         # self._animThread = threading.Thread(target=self._animationLoop, daemon=True)
@@ -88,6 +90,17 @@ class Actor:
                 self.stopAnimation()
         else:
             self.surface.blit(self.baseMaterial.surface, (0, 0))
+
+        if self.autoCollide:
+            self.mask = pygame.mask.from_surface(self.surface)
+
+    def isCollide(self, other):
+        if other.mask is not None:
+            return self.mask.overlap(other.mask, other.position - self.position)
+
+        return False
+
+
 
     def draw(self):
         self.game.scene.surface.blit(self.surface, self.position)

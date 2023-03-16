@@ -11,11 +11,14 @@ class Scene:
         self.surface.fill((0, 0, 0, 0))
         self.rect = self.surface.get_rect()
         self.game = game
+        self.light_surface = pygame.Surface((game.width, game.height))
+        self.light_surface.fill("white")
         self.gui_components: List[BaseComponent] = self.defineComponents()
         self.actors: List = self.defineActors()
+        self.lights: List = self.defineLights()
 
     def draw(self):
-        zIndexSorted = self.gui_components + self.actors
+        zIndexSorted = self.gui_components + self.actors + self.lights
         zIndexSorted = sorted(zIndexSorted, key=lambda x: x.zIndex)
         for item in zIndexSorted:
             if item.visible:
@@ -44,6 +47,9 @@ class Scene:
         return []
 
     def defineActors(self):
+        return []
+
+    def defineLights(self):
         return []
 
     def getActor(self, name):

@@ -30,7 +30,7 @@ class UISlider(BaseComponent):
         self.onValueChanged = []
 
     def draw(self):
-        self.surface.fill((0, 0, 0, 255))
+        self.surface.fill((0, 0, 0, 0))
         pygame.draw.rect(self.surface, self.color, self.rect, 0, 10)
         pygame.draw.rect(self.surface, self.activeColor, pygame.Rect(
             self.rect.x,
