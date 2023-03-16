@@ -24,6 +24,16 @@ class TextureMaterial(Material):
             self.image = self.image.convert()
         self.size = self.image.get_size()
         self.surface = pygame.Surface(self.size, pygame.SRCALPHA if self.image.get_alpha() else 0)
+        if self.image.get_alpha():
+            self.surface = self.surface.convert_alpha()
+        else:
+            self.surface = self.surface.convert()
         self.surface.blit(self.image, (0, 0))
-        self.surface = self.surface.convert_alpha()
+
+    def copy(self):
+        copy = TextureMaterial(self.name, self.path)
+        copy.type = self.type
+        copy.surface = self.surface
+        copy.size = self.size
+        return copy
 

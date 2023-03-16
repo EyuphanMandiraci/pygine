@@ -1,3 +1,5 @@
+import random
+
 import pygine.utils
 from pygine import Actor
 from pygine.gui_components import UIButton, UISlider, UICheckbox
@@ -14,15 +16,17 @@ class MainMenu(Scene):
         self.game = game
 
     def defineComponents(self):
-        button = UIButton(self.game, self.surface, Point2(0, 100), text="Button", color=Point3(255, 0, 0), hoverColor=Point3(0, 255, 0))
-        slider = UISlider(self.game, self.surface, Point2(0, 0), Point3(255, 255, 255), Point3(255, 0, 0), Point3(0, 255, 0), Point2(300, 20), 0, 100)
+        button = UIButton(self.game, self.surface, Point2(0, 100), text="Button", color=Point3(255, 0, 0),
+                          hoverColor=Point3(0, 255, 0))
+        slider = UISlider(self.game, self.surface, Point2(0, 0), Point3(255, 255, 255), Point3(255, 0, 0),
+                          Point3(0, 255, 0), Point2(300, 20), 0, 100)
         checkbox = UICheckbox(self.game, self.surface, Point2(0, 50), Point3(255, 255, 255), Point2(20, 20))
         return [button, slider, checkbox]
 
     def defineActors(self):
         redMaterial = ColorMaterial("red", Point3(255, 0, 0))
 
-        charMaterial = TextureMaterial("char", "headFocus.png")
+        charMaterial = TextureMaterial("char", "character_malePerson_idle.png")
         anim = TextureAnimation("walk")
         actor1 = Actor(self.game, "Actor 1", "actor1", Point2(100, 100), charMaterial)
         actor1.addAnimation(anim)
@@ -46,4 +50,10 @@ class MainMenu(Scene):
         if Input.isPressed("S"):
             self.getActor("Actor 1").position.y += 10 * self.game.deltaTime
 
+        if Input.isPressed("Q"):
+            self.getActor("Actor 1").stopAnimation()
 
+        if Input.isPressed("X"):
+            self.getActor("Actor 1").playAnimation("walk")
+
+        # print(f"Particle count: {len(self.particleManager.particles)}")

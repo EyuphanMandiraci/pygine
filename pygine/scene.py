@@ -7,18 +7,19 @@ from pygine.gui_components import BaseComponent
 class Scene:
     def __init__(self, game, title):
         self.title: str = title
-        self.surface: pygame.Surface = pygame.Surface((game.width, game.height), pygame.SRCALPHA)
+        self.surface: pygame.Surface = pygame.Surface((game.width, game.height), pygame.SRCALPHA).convert_alpha()
         self.surface.fill((0, 0, 0, 0))
+        self.rect = self.surface.get_rect()
         self.game = game
         self.gui_components: List[BaseComponent] = self.defineComponents()
         self.actors: List = self.defineActors()
 
     def draw(self):
-        for component in self.gui_components:
-            component.draw()
-
-        for actor in self.actors:
-            actor.draw()
+        zIndexSorted = self.gui_components + self.actors
+        zIndexSorted = sorted(zIndexSorted, key=lambda x: x.zIndex)
+        for item in zIndexSorted:
+            if item.visible:
+                item.draw()
 
         self.game.display.blit(self.surface, (0, 0))
         self.surface.fill((0, 0, 0, 0))

@@ -1,6 +1,6 @@
 {
   "type": "Color",
-  "duration": 10,
+  "duration": 1000,
   "fromColor": [255, 0, 0],
   "toColor": [0, 0, 255]
 }

@@ -14,21 +14,25 @@ class Actor:
         self.name = name
         self.game = game
         self.tag = tag
+        self.visible = True
         self.position = position
         self.first_position = position
-        self.material = material
-        if self.material.type == "Color":
+        self.zIndex = 0
+        self.baseMaterial = material
+        if self.baseMaterial.type == "Color":
             self.size = size
-            self.material.size = size
+            self.baseMaterial.size = size
         else:
-            self.size = self.material.size
-        self.material.reinitSurface()
+            self.size = self.baseMaterial.size
+        self.baseMaterial.reinitSurface()
+        self.material = self.baseMaterial.copy()
         self.surface = self.material.surface
         self.rect = self.surface.get_rect()
         self.rect.topleft = self.position
         self.animations = {}
         self.animation = None
-        self._animThread = threading.Thread(target=self._animationLoop, daemon=True)
+        # self._animThread = threading.Thread(target=self._animationLoop, daemon=True)
+        self.animationPlaying = False
         # self._velocity = Vector2(self.position, 0, 0)
         # self.current_velocity = copy.deepcopy(self._velocity)
 
@@ -46,17 +50,33 @@ class Actor:
 
     def playAnimation(self, name):
         self.animation = self.animations.get(name)
-        self._animThread.start()
+        self.animation.frame = 0
+        if not self.animationPlaying:
+            threading.Thread(target=self._animationLoop, daemon=True).start()
+            self.animationPlaying = True
+
+    def stopAnimation(self):
+        self.animation = None
+        self.material = self.baseMaterial.copy()
+        self.material.reinitSurface()
+        self.surface = self.material.surface.copy()
+        self.animationPlaying = False
 
     def _animationLoop(self):
         while True:
             if self.animation is not None:
                 self.animation.update()
+            else:
+                break
 
     def update(self):
         # self.position += self.current_velocity
         # self.current_velocity.force -= .057
         self.rect.topleft = self.position
+        if self.rect.colliderect(self.game.scene.rect):
+            self.visible = True
+        else:
+            self.visible = False
         if self.animation is not None:
             if self.animation.type == "Texture" and self.material.type == "Texture":
                 self.material.reinitSurface(self.animation.frames[self.animation.frame]["image"])
@@ -64,6 +84,11 @@ class Actor:
             elif self.animation.type == "Color" and self.material.type == "Color":
                 self.material.reinitSurface(self.animation.frames[self.animation.frame]["color"])
                 self.surface = self.material.surface
+            else:
+                self.stopAnimation()
+        else:
+            self.surface.blit(self.baseMaterial.surface, (0, 0))
 
     def draw(self):
         self.game.scene.surface.blit(self.surface, self.position)
+        self.surface.fill((0, 0, 0, 0))

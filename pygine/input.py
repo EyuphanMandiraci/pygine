@@ -1,5 +1,7 @@
 import pygame
 
+from pygine.math import Point2
+
 
 class Input:
     keys = {
@@ -64,7 +66,7 @@ class Input:
 
     @staticmethod
     def getMousePos():
-        return pygame.mouse.get_pos()
+        return Point2(*pygame.mouse.get_pos())
 
     @staticmethod
     def isMousePressed(button):

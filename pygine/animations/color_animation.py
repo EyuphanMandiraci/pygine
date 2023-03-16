@@ -19,7 +19,7 @@ class ColorAnimation(Animation):
         for i in range(len(colors)):
             self.frames.append({
                 "id": i,
-                "duration": self.properties["duration"] / len(colors),
+                "duration": self.properties["duration"] / 1000 / len(colors),
                 "color": colors[i]
             })
 

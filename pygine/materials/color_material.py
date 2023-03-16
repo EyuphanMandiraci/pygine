@@ -15,8 +15,15 @@ class ColorMaterial(Material):
 
     def reinitSurface(self, color=None):
         if color is not None:
-            self.color = (color.red, color.green, color.blue, color.alpha)
-        self.surface = pygame.Surface(self.size)
+            self.color = (color.red, color.green, color.blue)
+        self.surface = pygame.Surface(self.size).convert()
+        self.surface.set_colorkey((0, 0, 0), pygame.RLEACCEL)
         self.surface.fill(self.color)
-        self.surface = self.surface.convert()
+
+    def copy(self):
+        copy = ColorMaterial(self.name, self.color)
+        copy.type = self.type
+        copy.surface = self.surface
+        copy.size = self.size
+        return copy
 

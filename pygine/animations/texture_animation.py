@@ -38,7 +38,7 @@ class TextureAnimation(Animation):
         if self.stopped:
             self.frame = 0
         if not self.paused:
-            time.sleep(self.frames[self.frame]['duration'])
+            time.sleep(self.frames[self.frame]["duration"] / 1000)
             self.frame += 1
             if self.frame >= len(self.frames):
                 self.frame = 0

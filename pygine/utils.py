@@ -30,3 +30,7 @@ def colorInterpolation(color1, color2, amount):
 
     return result
 
+
+def listChunker(lst, n):
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]

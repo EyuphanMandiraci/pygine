@@ -23,7 +23,9 @@ class BaseComponent:
             self.size = size
         self.color: math.Point3 = color
         self.game = game
-        self.surface: pygame.Surface = pygame.Surface((self.size[0], self.size[1]), pygame.SRCALPHA)
+        self.zIndex = 0
+        self.visible = True
+        self.surface: pygame.Surface = pygame.Surface((self.size[0], self.size[1]), pygame.SRCALPHA).convert_alpha()
         self.surface.fill((0, 0, 0, 0))
         self.rect = pygame.Rect(self.position[0], self.position[1], self.size[0], self.size[1])
         self.onClick = []
@@ -40,6 +42,10 @@ class BaseComponent:
 
     def update(self):
         self.rect = pygame.Rect(self.position[0], self.position[1], self.size[0], self.size[1])
+        if self.rect.colliderect(self.game.scene.rect):
+            self.visible = True
+        else:
+            self.visible = False
 
     def triggerOnClick(self, evt=None):
         self.clicked = True

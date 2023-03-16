@@ -52,6 +52,8 @@ class Point2:
     def __add__(self, other):
         if isinstance(other, Point2):
             return Point2(self.x + other.x, self.y + other.y)
+        elif isinstance(other, (int, float)):
+            return Point2(self.x + other, self.y + other)
         else:
             return Point2(
                 self.x + math.cos(other.direction) * (other.force / 10),

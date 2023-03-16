@@ -7,3 +7,10 @@ class Material:
 
     def reinitSurface(self, image=None):
         pass
+
+    def copy(self):
+        copy = Material(self.name)
+        copy.type = self.type
+        copy.surface = self.surface
+        copy.size = self.size
+        return copy
